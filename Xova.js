@@ -1,7 +1,7 @@
 const Eris = require("eris");
 
 // Replace BOT_TOKEN with personal bot's token
-const BOT_TOKEN = "NzYyODY5NzQ4ODU2OTEzOTQx.X3vb0Q.iChNkT281C6R2aMK6VVFctMyUoM";
+const BOT_TOKEN = "";
 
 const bot = new Eris.CommandClient(BOT_TOKEN, {}, {
     description: "Custom Rank/Nickname Bot",
@@ -21,8 +21,8 @@ bot.registerCommand("ping", "Pong!", {
 
 // Rank command
 bot.registerCommand("rank", (msg, args) => {
-    if (args.length < 2) {
-        bot.createMessage(msg.channel.id, {
+    if (args.length < 2) { // Checks for name and color arguments
+        bot.createMessage(msg.channel.id, { // If name and color are not included, returns error message
             embed: {
                 title: "Command Usage",
                 description: "*Usage:* `~rank <name> <hex color>`\n*Example:* ~rank R4NK #ffff00",
@@ -38,7 +38,7 @@ bot.registerCommand("rank", (msg, args) => {
         }
 
         if (colorReg.test(/[a-f0-9]{6}/)) { // Checks if value is a true hex color
-            bot.createMessage(msg.channel.id, {
+            bot.createMessage(msg.channel.id, { // If not hex value, returns error message
                 embed: {
                     title: "Improper Usage",
                     description: "Must be a hex color\n*Example:* ~rank R4NK #ffff00",

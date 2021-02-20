@@ -1,5 +1,5 @@
 # Xova
-Discord Bot able to create custom ranks based on user arguments and add an approval system for nicknames. 
+Discord Bot able to create custom ranks based on user arguments and adds an approval system for nicknames. 
 
 ### Prefix
 `~`
