@@ -1,7 +1,8 @@
+const { SSL_OP_TLS_ROLLBACK_BUG } = require("constants");
 const Eris = require("eris");
 
 // Replace BOT_TOKEN with personal bot's token
-const BOT_TOKEN = "";
+const BOT_TOKEN = "NzYyODY5NzQ4ODU2OTEzOTQx.X3vb0Q.rcplVa4i6uPrKJZBi9O1TaufceI"; // Delete this before pushing
 
 const bot = new Eris.CommandClient(BOT_TOKEN, {}, {
     description: "Custom Rank/Nickname Bot",
@@ -25,43 +26,64 @@ bot.registerCommand("rank", (msg, args) => {
         bot.createMessage(msg.channel.id, { // If name and color are not included, returns error message
             embed: {
                 title: "Command Usage",
-                description: "*Usage:* `~rank <name> <hex color>`\n*Example:* ~rank R4NK #ffff00",
+                description: "*Usage:* `~rank <name> <hex color>`\n*Example:* ~rank Xero #ffff00",
                 color: 16776960
             }
         });
     }
     else {
-        const colorReg = new RegExp(args[args.length - 1]);
+        const color = args[args.length - 1];
+        const colorReg = new RegExp(color);
 
-        if (!colorReg.test(/^#/)) { // Removes # from hex color for easier reading
-            args[args.length - 1] = args[args.length - 1].substring(1);
+        if (color.length == 7) { // Removes # from hex color for easier reading
+            color = color.substring(1);
         }
 
         if (colorReg.test(/[a-f0-9]{6}/)) { // Checks if value is a true hex color
             bot.createMessage(msg.channel.id, { // If not hex value, returns error message
                 embed: {
                     title: "Improper Usage",
-                    description: "Must be a hex color\n*Example:* ~rank R4NK #ffff00",
+                    description: "Must be a hex color\n*Example:* ~rank Xero #ffff00",
                     color: 16776960
                 }
             });
         }
         else {
-            const color = args[args.length - 1];
             const nameArr = [];
             for (i = 0; i < args.length - 1; i++) { // Gets rid of hex color for name
                 nameArr[i] = args[i];               // Optimize this code
             }
-            console.log(color); // For debugging only
-
             const name = nameArr.join(" ");
-            console.log(name);
+
+            // Checks for role name (Conflicts with roleID)
+            if (msg.channel.guild.roles.find(role => role.name == name) != null) {
+                bot.createMessage(msg.channel.id, { // If not hex value, returns error message
+                    embed: {
+                        title: "Role Name In Use",
+                        description: "Please choose a different name or contact a staff member.",
+                        color: 16776960
+                    }
+                });
+            }
+
+            //Creates role
+            bot.createRole(msg.channel.guild.id, {
+                name: name,
+                color: parseInt(color, 16),
+                permissions: 65536
+            })
+            // Adds role to user
+            /*
+            bot.addGuildMemberRole(msg.channel.guild.id, msg.author.id, 
+                msg.channel.guild.roles.get(roles => msg.channel.guild.roles.find(role => role.name == name)));
+            */
+            console.log("Role sucessfully created!");
         }
     }
 
-    },{
+}, {
     description: "Creates custom ranks",
-    fullDescription: "Creates a custom rank for user based on input.\n*Usage:* `~rank <name> <hex color>`\n*Example:* ~rank R4NK ffff00"
+    fullDescription: "Creates a custom rank for user based on input.\n*Usage:* `~rank <name> <hex color>`\n*Example:* ~rank Xero ffff00"
 })
 
 bot.connect();

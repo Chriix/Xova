@@ -12,6 +12,8 @@ Discord Bot able to create custom ranks based on user arguments and adds an appr
 `~rank <user> <hex color>`: Creates a custom rank and gives it to user
 
 ### Future Features
+ - Add custom permissions and role list placement
+ - Add `~nick` command
  - Add Nickname approval system
  - Add documentation for self-hosting
  - Add hosting using Docker
