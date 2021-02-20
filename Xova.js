@@ -2,7 +2,7 @@ const { SSL_OP_TLS_ROLLBACK_BUG } = require("constants");
 const Eris = require("eris");
 
 // Replace BOT_TOKEN with personal bot's token
-const BOT_TOKEN = "NzYyODY5NzQ4ODU2OTEzOTQx.X3vb0Q.rcplVa4i6uPrKJZBi9O1TaufceI"; // Delete this before pushing
+const BOT_TOKEN = ""; // Delete this before pushing
 
 const bot = new Eris.CommandClient(BOT_TOKEN, {}, {
     description: "Custom Rank/Nickname Bot",
