@@ -57,7 +57,7 @@ bot.registerCommand("rank", (msg, args) => {
 
             // Checks for role name (role names conflicts with role IDs)
             if (msg.channel.guild.roles.find(role => role.name == name) != null) {
-                bot.createMessage(msg.channel.id, { // If not hex value, returns error message
+                bot.createMessage(msg.channel.id, {
                     embed: {
                         title: "Role Name In Use",
                         description: "Please choose a different name or contact a staff member.",
