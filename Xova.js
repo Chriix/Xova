@@ -2,10 +2,10 @@ const { SSL_OP_TLS_ROLLBACK_BUG } = require("constants");
 const Eris = require("eris");
 
 // Replace BOT_TOKEN with personal bot's token
-const BOT_TOKEN = ""; // Delete this before pushing
+const BOT_TOKEN = "";
 
 const bot = new Eris.CommandClient(BOT_TOKEN, {}, {
-    description: "Custom Rank/Nickname Bot",
+    description: "Utility Bot",
     owner: "**Chrix**",
     prefix: "~"
 })
@@ -32,14 +32,14 @@ bot.registerCommand("rank", (msg, args) => {
         });
     }
     else {
-        const color = args[args.length - 1];
-        const colorReg = new RegExp(color);
+        var color = args[args.length - 1];
 
         if (color.length == 7) { // Removes # from hex color for easier reading
             color = color.substring(1);
         }
+        const colorReg = new RegExp('[a-f0-9]{6}');
 
-        if (colorReg.test(/[a-f0-9]{6}/)) { // Checks if value is a true hex color
+        if (!colorReg.test(color)) { // Checks if value is a true hex color
             bot.createMessage(msg.channel.id, { // If not hex value, returns error message
                 embed: {
                     title: "Improper Usage",
@@ -49,13 +49,13 @@ bot.registerCommand("rank", (msg, args) => {
             });
         }
         else {
-            const nameArr = [];
+            var nameArr = [];
             for (i = 0; i < args.length - 1; i++) { // Gets rid of hex color for name
-                nameArr[i] = args[i];               // Optimize this code
+                nameArr[i] = args[i];               
             }
             const name = nameArr.join(" ");
 
-            // Checks for role name (Conflicts with roleID)
+            // Checks for role name (role names conflicts with role IDs)
             if (msg.channel.guild.roles.find(role => role.name == name) != null) {
                 bot.createMessage(msg.channel.id, { // If not hex value, returns error message
                     embed: {
@@ -65,19 +65,33 @@ bot.registerCommand("rank", (msg, args) => {
                     }
                 });
             }
+            else {
+                //Creates role
+                const promiseRole = msg.channel.guild.createRole({
+                    name: name,
+                    color: parseInt(color, 16),
+                    permissions: 65536
+                })
+                    .then(function(response) {
+                        return response;
+                    });
+                
+                // Adds role to user
+                const addRole = async () => {
+                    const wait = await promiseRole;
+                    msg.member.addRole(wait.id);
+                }; 
+                addRole();
 
-            //Creates role
-            bot.createRole(msg.channel.guild.id, {
-                name: name,
-                color: parseInt(color, 16),
-                permissions: 65536
-            })
-            // Adds role to user
-            /*
-            bot.addGuildMemberRole(msg.channel.guild.id, msg.author.id, 
-                msg.channel.guild.roles.get(roles => msg.channel.guild.roles.find(role => role.name == name)));
-            */
-            console.log("Role sucessfully created!");
+                // Success message
+                bot.createMessage(msg.channel.id, { 
+                    embed: {
+                        title: "Rank Successfully Created!",
+                        description: "The rank has been created and added!",
+                        color: 16776960
+                    }
+                });
+            }
         }
     }
 
